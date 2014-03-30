@@ -39,6 +39,10 @@ public class JasmineTestRunner extends Runner {
                 throw new RuntimeException("please use java 8");
             }
 
+            if (info.browser()) {
+                evalResource(nashorn, "/envjs/env.js");
+            }
+
             evalResource(nashorn, "/jasmine/jasmine.js");
             evalResource(nashorn, "/jasmine/boot.js");
 

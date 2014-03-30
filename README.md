@@ -3,9 +3,10 @@ JUnit Jasmine Runner
 
 ### Features
 * Runs [Jasmine Tests](http://jasmine.github.io/2.0/introduction.html) with JUnit
-* Integrates with Eclipse, IntelliJ, Maven etc
-* Uses Java Nashorn
-* Jasmine 2
+* Integrates with Eclipse, IntelliJ, Maven etc.
+* Uses Java Nashorn JavaScript interpreter
+* Optional Browser Support (with [Envjs](http://www.envjs.com/))
+* Supports Jasmine 2
 
 ### Requirements
 * Java 8
@@ -42,6 +43,5 @@ By default the tests are expected to be below `src/test/javascript` and the sour
 
 
 ### ToDo 
-* add optional browser support
 * deploy to maven central
 * optionally emit HTML runner

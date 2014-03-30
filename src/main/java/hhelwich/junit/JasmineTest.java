@@ -24,4 +24,6 @@ public @interface JasmineTest {
     String[] src();
 
     String[] test();
+
+    boolean browser() default false;
 }
