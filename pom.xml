@@ -3,17 +3,38 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>hhelwich.junit</groupId>
-  <artifactId>jasmine-runner</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <artifactId>junit-jasmine-runner</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>jasmine-runner</name>
-  <url>http://maven.apache.org</url>
+  <name>JUnit Jasmine Runner</name>
+  <description>A JUnit runner for Jasmine</description>
+  <url>https://github.com/hhelwich/junit-jasmine-runner</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/hhelwich/junit-jasmine-runner</url>
+    <connection>scm:git:https://github.com/hhelwich/junit-jasmine-runner.git</connection>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>Hendrik Helwich</name>
+      <email>hendrik@helwich.de</email>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -35,4 +56,5 @@
       <version>4.11</version>
     </dependency>
   </dependencies>
+
 </project>
