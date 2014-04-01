@@ -18,7 +18,7 @@ Add project dependency. E.g if you use maven:
 
 ```xml
 <dependency>
-  <groupId>hhelwich.junit</groupId>
+  <groupId>de.helwich.junit</groupId>
   <artifactId>junit-jasmine-runner</artifactId>
   <version>0.1.0</version>
   <scope>test</scope>
@@ -28,7 +28,7 @@ Add project dependency. E.g if you use maven:
 Add Java class (below `src/test/java` for maven) which name ends with “Test”. The class specifies the JavaScript test and source files:
 
 ```java
-import hhelwich.junit.*;
+import de.helwich.junit.*;
 import org.junit.runner.RunWith;
 
 @RunWith(JasmineTestRunner.class)

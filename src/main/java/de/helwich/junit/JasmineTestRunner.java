@@ -1,4 +1,4 @@
-package hhelwich.junit;
+package de.helwich.junit;
 
 import java.io.File;
 import java.net.URL;
@@ -50,7 +50,7 @@ public class JasmineTestRunner extends Runner {
                     + JasmineDescriber.class.getName() + "\")); ");
             describer.setRootName(testClass.getName());
 
-            evalResource(nashorn, "/hhelwich/junit/describer.js");
+            evalResource(nashorn, "/de/helwich/junit/describer.js");
 
             for (String src : info.src()) {
                 evalFile(nashorn, info.srcDir() + "/" + src + info.fileSuffix());
@@ -64,7 +64,7 @@ public class JasmineTestRunner extends Runner {
             reporter = (JasmineReporter) nashorn.eval("jasmine.junitReporter = new (Java.type(\""
                     + JasmineReporter.class.getName() + "\")); ");
             reporter.setDescription(description);
-            evalResource(nashorn, "/hhelwich/junit/reporter.js");
+            evalResource(nashorn, "/de/helwich/junit/reporter.js");
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }

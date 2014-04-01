@@ -1,4 +1,4 @@
-package hhelwich.junit;
+package de.helwich.junit;
 
 import java.util.ArrayList;
 import java.util.List;
