@@ -41,6 +41,17 @@ public class RunJasmineTest {}
 
 By default the tests are expected to be below `src/test/javascript` and the sources below `src/main/javascript`. The default file suffix is `.js`.
 
+### Release
+
+```
+mvn clean deploy -P release
+cd target
+jar -cvf bundle.jar junit-jasmine-runner-*
+```
+
+http://central.sonatype.org/pages/manual-staging-bundle-creation-and-deployment.html
+
+http://central.sonatype.org/pages/releasing-the-deployment.html
 
 ### ToDo
 * optionally emit HTML runner
