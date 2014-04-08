@@ -42,6 +42,5 @@ public class RunJasmineTest {}
 By default the tests are expected to be below `src/test/javascript` and the sources below `src/main/javascript`. The default file suffix is `.js`.
 
 
-### ToDo 
-* deploy to maven central
+### ToDo
 * optionally emit HTML runner
