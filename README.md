@@ -25,6 +25,8 @@ Add project dependency. E.g if you use maven:
 </dependency>
 ```
 
+Or download from [here](http://search.maven.org/#search|ga|1|g%3A%22de.helwich.junit%22%20AND%20a%3A%22junit-jasmine-runner%22).
+
 Add Java class (below `src/test/java` for maven) which name ends with “Test”. The class specifies the JavaScript test and source files:
 
 ```java
@@ -34,7 +36,8 @@ import org.junit.runner.RunWith;
 @RunWith(JasmineTestRunner.class)
 @JasmineTest(
     src =  { "Song", "Player" }, 
-    test = { "SpecHelper", "PlayerSpec" }
+    test = { "SpecHelper", "PlayerSpec" },
+    browser = false
 )
 public class RunJasmineTest {}
 ```
