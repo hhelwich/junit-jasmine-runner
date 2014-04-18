@@ -18,7 +18,11 @@
 		it: function(description, func) {
 			describer.testStart(description);
 			return orig.it.apply(this, arguments);
-		}
+        },
+        xit: function(description, func) {
+			describer.testStart(description);
+			return orig.xit.apply(this, arguments);
+        }
 	};
 
 	var orig = {};
