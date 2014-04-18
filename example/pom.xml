@@ -15,7 +15,7 @@
     <dependency>
       <groupId>de.helwich.junit</groupId>
       <artifactId>junit-jasmine-runner</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.1.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
