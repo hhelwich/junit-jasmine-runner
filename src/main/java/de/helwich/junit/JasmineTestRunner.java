@@ -41,6 +41,8 @@ public class JasmineTestRunner extends Runner {
 
             if (info.browser()) {
                 evalResource(nashorn, "/envjs/env.js");
+            } else {
+                evalResource(nashorn, "/de/helwich/junit/timer.js");
             }
 
             evalResource(nashorn, "/jasmine/jasmine.js");
@@ -115,6 +117,8 @@ public class JasmineTestRunner extends Runner {
         nashorn.eval("jasmine.getEnv().execute();");
         if (info.browser()) {
             nashorn.eval("Envjs.wait()");
+        } else {
+            nashorn.eval("setTimeout.wait()");
         }
     }
 }
