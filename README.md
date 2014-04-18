@@ -42,7 +42,7 @@ import org.junit.runner.RunWith;
 public class RunJasmineTest {}
 ```
 
-By default the tests are expected to be below `src/test/javascript` and the sources below `src/main/javascript`. The default file suffix is `.js`.
+By default the tests are expected to be below `src/test/js` and the sources below `src/main/js`. The default file suffix is `.js`.
 
 ### Release
 

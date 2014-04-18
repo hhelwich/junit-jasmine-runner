@@ -15,9 +15,9 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface JasmineTest {
 
-    String srcDir() default "/src/main/javascript";
+    String srcDir() default "/src/main/js";
 
-    String testDir() default "/src/test/javascript";
+    String testDir() default "/src/test/js";
 
     String fileSuffix() default ".js";
 
