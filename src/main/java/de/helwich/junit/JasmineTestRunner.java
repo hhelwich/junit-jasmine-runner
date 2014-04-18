@@ -113,5 +113,8 @@ public class JasmineTestRunner extends Runner {
     public void runThrows(RunNotifier notifier) throws ScriptException {
         reporter.setNotifier(notifier);
         nashorn.eval("jasmine.getEnv().execute();");
+        if (info.browser()) {
+            nashorn.eval("Envjs.wait()");
+        }
     }
 }
