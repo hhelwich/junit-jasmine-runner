@@ -19,6 +19,7 @@
 			describer.testStart(description);
 			return orig.it.apply(this, arguments);
         },
+		xdescribe: function(name, func) {},
         xit: function(description, func) {
 			describer.testStart(description);
 			return orig.xit.apply(this, arguments);
