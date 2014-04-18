@@ -52,9 +52,9 @@ cd target
 jar -cvf bundle.jar junit-jasmine-runner-*
 ```
 
-http://central.sonatype.org/pages/manual-staging-bundle-creation-and-deployment.html
-
-http://central.sonatype.org/pages/releasing-the-deployment.html
+* login [here](https://oss.sonatype.org/)
+* Build Promotion > Staging Upload > Artifact Bundle > Select Bundle to Upload
+* Build Promotion > Staging Repositories > Select > Release
 
 ### ToDo
 * optionally emit HTML runner
