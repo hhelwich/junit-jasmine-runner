@@ -1,3 +1,4 @@
+//noinspection ThisExpressionReferencesGlobalObjectJS
 /**
  * Mock jasmine functions to get test information before execution of tests.
  *

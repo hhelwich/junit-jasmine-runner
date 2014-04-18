@@ -3,7 +3,7 @@
  *
  * @author Hendrik Helwich
  */
-(function(global){
+(function(){
 
     var junitReporter = jasmine.junitReporter;
 
@@ -37,4 +37,4 @@
     var env = jasmine.getEnv();
     env.addReporter(reporter);
 
-}(this));
+}());

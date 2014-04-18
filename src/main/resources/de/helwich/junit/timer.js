@@ -1,3 +1,4 @@
+//noinspection ThisExpressionReferencesGlobalObjectJS
 /**
  * Implement setTimeout()/clearTimeout() polyfills for nashorn (needed for jasmine asynchronous tests).
  *
@@ -14,21 +15,27 @@
 
     /**
      * Maps function string ids to the actual functions.
-     * @type {Object.<string, function()>}
+     * @type {Object.<string, {start: number, fn: !function()}>}
      */
     var fns = {};
-
-    /**
-     * Function counter used to create function string ids.
-     * @type {number}
-     */
-    var fnId = 0;
 
     /**
      * Current virtual time in milliseconds.
      * @type {number}
      */
     var time = 0;
+
+    /**
+     * Returns a new id string.
+     *
+     * @return {string}
+     */
+    var getId = (function() {
+        var fnId = 0;
+        return function() {
+            return "" + (fnId++);
+        };
+    }());
 
     /**
      * Used to sort function ids by start time.
@@ -50,15 +57,12 @@
      */
     var setTimeout = function(fn, ms) {
         // create id
-        var fid = "" + fnId;
-        fnId += 1;
-        // calculate start time
-        var start = time + ms;
+        var fid = getId();
         // store function
         fnIds.push(fid);
         fns[fid] = {
             fn: fn,
-            start: start
+            start: time + ms
         };
         // sort functions by start time
         fnIds.sort(timeCompare);
@@ -81,7 +85,7 @@
     /**
      * Run all asynchronous functions.
      */
-    var wait = function() {
+    setTimeout.wait = function wait() {
         if (fnIds.length > 0) {
             var fid = fnIds.splice(0, 1)[0];
             var fn = fns[fid];
@@ -94,7 +98,6 @@
 
     // export API
 
-    setTimeout.wait = wait;
     global.setTimeout =  setTimeout;
     global.clearTimeout = clearTimeout;
 
