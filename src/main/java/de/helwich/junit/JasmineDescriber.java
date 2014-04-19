@@ -27,7 +27,7 @@ public class JasmineDescriber {
     /**
      * Simple id counter used to give all descriptions a unique id.
      */
-    private int descId = 1;
+    private static int descId = 1;
 
     private void pushDescription(Description desc) {
         checkEnabled();
