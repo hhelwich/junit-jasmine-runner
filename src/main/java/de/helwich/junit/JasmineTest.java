@@ -21,7 +21,7 @@ public @interface JasmineTest {
 
     String fileSuffix() default ".js";
 
-    String[] src();
+    String[] src() default {};
 
     String[] test();
 

@@ -4,5 +4,5 @@ import de.helwich.junit.JasmineTest;
 import de.helwich.junit.JasmineTestRunner;
 
 @RunWith(JasmineTestRunner.class)
-@JasmineTest(src = { "Song", "Player" }, test = { "SpecHelper", "PlayerSpec" })
+@JasmineTest(test = { "introduction" })
 public class RunJasmineTest {}
