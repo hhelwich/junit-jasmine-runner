@@ -1,3 +1,4 @@
+package js;
 import org.junit.runner.RunWith;
 
 import de.helwich.junit.JasmineTest;
