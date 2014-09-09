@@ -15,6 +15,8 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface JasmineTest {
 
+    boolean coverage() default false;
+
     String srcDir() default "/src/main/js";
 
     String testDir() default "/src/test/js";
