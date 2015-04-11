@@ -1,21 +1,12 @@
 package de.helwich.junit;
 
 import java.io.File;
-import java.io.FileReader;
 import java.net.URL;
-import java.nio.charset.Charset;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
-import jscover2.instrument.Configuration;
-import jscover2.instrument.Instrumenter;
-import jscover2.report.JSCover2CoverageSummary;
-import jscover2.report.JSCover2Data;
-import jscover2.report.text.TextReport;
-import org.apache.commons.io.FileUtils;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
@@ -32,7 +23,6 @@ public class JasmineTestRunner extends Runner {
     private final ScriptEngine nashorn;
     private final JasmineReporter reporter;
     private final Description description;
-    private Configuration config = new Configuration();
 
     public JasmineTestRunner(Class<?> testClass) {
         try {
@@ -65,7 +55,7 @@ public class JasmineTestRunner extends Runner {
             evalResource(nashorn, "/de/helwich/junit/describer.js");
 
             for (String src : info.src()) {
-                evalFile(nashorn, info.srcDir() + "/" + src + info.fileSuffix(), info.coverage());
+                evalFile(nashorn, info.srcDir() + "/" + src + info.fileSuffix());
             }
             for (String test : info.test()) {
                 evalFile(nashorn, info.testDir() + "/" + test + info.fileSuffix());
@@ -104,20 +94,11 @@ public class JasmineTestRunner extends Runner {
     }
 
     private final Object evalFile(ScriptEngine nashorn, String name) {
-        return evalFile(nashorn, name, false);
-    }
-
-    private final Object evalFile(ScriptEngine nashorn, String name, boolean collectCoverage) {
+        File file = new File(projectDir(), name);
+        String src = file.getAbsolutePath();
         try {
-            File file = new File(projectDir().getCanonicalFile(), name);
-            if (collectCoverage) {
-                Instrumenter instrumenter = new Instrumenter(config);
-                String code = FileUtils.readFileToString(new File("."+name), Charset.defaultCharset());
-                String instrumented = instrumenter.instrument(name, code);
-                return nashorn.eval(instrumented);
-            } else
-                return nashorn.eval(new FileReader(file));
-        } catch (Exception e) {
+            return nashorn.eval("load('" + src + "')");
+        } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
     }
@@ -139,26 +120,5 @@ public class JasmineTestRunner extends Runner {
         } else {
             nashorn.eval("setTimeout.wait()");
         }
-        boolean coverageVarFound = (boolean)nashorn.eval("typeof " + config.getCoverVariableName() + " === 'object'");
-        if (info.coverage() && coverageVarFound) {
-            //printJSON(nashorn);
-            printCoverage(nashorn);
-        }
-    }
-
-    private void printCoverage(ScriptEngine nashorn) {
-        try {
-            JSCover2Data jscover2Data = new JSCover2Data((ScriptObjectMirror) nashorn.eval(config.getCoverVariableName()));
-            JSCover2CoverageSummary coverageSummary = new JSCover2CoverageSummary(jscover2Data);
-            TextReport report = new TextReport();
-            System.out.println(report.getTableFormattedFileSummary(coverageSummary));
-        } catch(Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void printJSON(ScriptEngine nashorn) throws ScriptException {
-        String json = (String) nashorn.eval("JSON.stringify("+config.getCoverVariableName()+")");
-        System.out.println("json = " + json);
     }
 }

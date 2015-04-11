@@ -4,7 +4,7 @@
 
   <groupId>de.helwich.junit</groupId>
   <artifactId>junit-jasmine-runner</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>0.1.1</version>
   <packaging>jar</packaging>
 
   <name>JUnit Jasmine Runner</name>
@@ -63,16 +63,6 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
-    </dependency>
-    <dependency>
-      <groupId>com.github.tntim96</groupId>
-      <artifactId>JSCover2</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
     </dependency>
   </dependencies>
 
