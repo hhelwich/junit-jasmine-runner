@@ -20,7 +20,7 @@ Add project dependency. E.g if you use maven:
 <dependency>
   <groupId>de.helwich.junit</groupId>
   <artifactId>junit-jasmine-runner</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -35,7 +35,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(JasmineTestRunner.class)
 @JasmineTest(
-    src =  { "Song", "Player" }, 
+    src =  { "Song", "Player" },
     test = { "SpecHelper", "PlayerSpec" },
     browser = false
 )
