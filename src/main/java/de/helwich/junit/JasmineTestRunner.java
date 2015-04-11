@@ -1,6 +1,8 @@
 package de.helwich.junit;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.net.URL;
 
 import javax.script.ScriptEngine;
@@ -13,7 +15,7 @@ import org.junit.runner.notification.RunNotifier;
 
 /**
  * The jasmine / jUnit test runner.
- * 
+ *
  * @author Hendrik Helwich
  */
 public class JasmineTestRunner extends Runner {
@@ -95,10 +97,11 @@ public class JasmineTestRunner extends Runner {
 
     private final Object evalFile(ScriptEngine nashorn, String name) {
         File file = new File(projectDir(), name);
-        String src = file.getAbsolutePath();
         try {
-            return nashorn.eval("load('" + src + "')");
+            return nashorn.eval(new FileReader(file));
         } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
