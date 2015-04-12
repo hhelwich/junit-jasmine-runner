@@ -1,3 +1,9 @@
+### v0.1.3 (2015-04-12)
+
+Features:
+
+* Update to current Jasmine version (2.0.0 -> 2.2.0)
+
 ### v0.1.2 (2015-04-11)
 
 Bugfixes:
