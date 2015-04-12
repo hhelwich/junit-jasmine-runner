@@ -4,7 +4,7 @@
  */
 /**
  ## Standalone Distribution
- The [standalone distribution](https://github.com/pivotal/jasmine/tree/master/dist) contains everything you need to start running Jasmine.
+ The [releases page](https://github.com/pivotal/jasmine/releases) has links to download the standalone distribution, which contains everything you need to start running Jasmine.
  After downloading a particular version and unzipping, opening `SpecRunner.html` will run the included specs.  You'll note that both the source files and their respective specs are linked in the `<head>` of the `SpecRunner.html`.
  To start using Jasmine, replace the source/spec files with your own.
  */
@@ -185,6 +185,17 @@ describe("Included matchers:", function() {
     expect(foo).not.toThrow();
     expect(bar).toThrow();
   });
+
+  it("The 'toThrowError' matcher is for testing a specific thrown exception", function() {
+    var foo = function() {
+      throw new TypeError("foo bar baz");
+    };
+
+    expect(foo).toThrowError("foo bar baz");
+    expect(foo).toThrowError(/bar/);
+    expect(foo).toThrowError(TypeError);
+    expect(foo).toThrowError(TypeError, "foo bar baz");
+  });
 });
 
 /**
@@ -211,15 +222,18 @@ describe("A spec", function() {
 
 /**
  ### Setup and Teardown
- To help a test suite DRY up any duplicated setup and teardown code, Jasmine provides the global `beforeEach` and `afterEach` functions. As the name implies the `beforeEach` function is called once before each spec in the `describe` is run and the `afterEach` function is called once after each spec.
- Here is the same set of specs written a little differently. The variable under test is defined at the top-level scope -- the `describe` block --  and initialization code is moved into a `beforeEach` function. The `afterEach` function resets the variable before continuing.
+ To help a test suite DRY up any duplicated setup and teardown code, Jasmine provides the global `beforeEach`, `afterEach`, `beforeAll`, and `afterAll` functions.
  */
 
-describe("A spec (with setup and tear-down)", function() {
-  var foo;
+/** As the name implies, the `beforeEach` function is called once before each spec in the `describe` is run, and the `afterEach` function is called once after each spec.
+ *
+ *
+ Here is the same set of specs written a little differently. The variable under test is defined at the top-level scope -- the `describe` block --  and initialization code is moved into a `beforeEach` function. The `afterEach` function resets the variable before continuing.
+ */
+describe("A spec using beforeEach and afterEach", function() {
+  var foo = 0;
 
   beforeEach(function() {
-    foo = 0;
     foo += 1;
   });
 
@@ -236,6 +250,33 @@ describe("A spec (with setup and tear-down)", function() {
     expect(true).toEqual(true);
   });
 });
+
+/** The `beforeAll` function is called only once before all the specs in `describe` are run, and the `afterAll` function is called after all specs finish. These functions can be used to speed up test suites with expensive setup and teardown.
+ *
+ *
+ * However, be careful using `beforeAll` and `afterAll`! Since they are not reset between specs, it is easy to accidentally leak state between your specs so that they erroneously pass or fail.
+ */
+describe("A spec using beforeAll and afterAll", function() {
+  var foo;
+
+  beforeAll(function() {
+    foo = 1;
+  });
+
+  afterAll(function() {
+    foo = 0;
+  });
+
+  it("sets the initial value of foo before specs run", function() {
+    expect(foo).toEqual(1);
+    foo += 1;
+  });
+
+  it("does not reset foo between specs", function() {
+    expect(foo).toEqual(2);
+  });
+});
+
 
 /**
 ### The `this` keyword
@@ -331,16 +372,17 @@ describe("Pending specs", function() {
   it("can be declared with 'it' but without a function");
 
   /** And if you call the function `pending` anywhere in the spec body, no matter the expectations, the spec will be marked pending.
+   * A string passed to `pending` will be treated as a reason and displayed when the suite finishes.
    */
   it("can be declared by calling 'pending' in the spec body", function() {
     expect(true).toBe(false);
-    pending();
+    pending('this is why it is pending');
   });
 });
 
 /**
  ## Spies
- Jasmine's has test double functions called spies. A spy can stub any function and tracks calls to it and all arguments. A spy only exists in the `describe` or `it` block it is defined, and will be removed after each spec. There are special matchers for interacting with spies.
+ Jasmine has test double functions called spies. A spy can stub any function and tracks calls to it and all arguments. A spy only exists in the `describe` or `it` block it is defined, and will be removed after each spec. There are special matchers for interacting with spies.
  __This syntax has changed for Jasmine 2.0.__
  The `toHaveBeenCalled` matcher will return true if the spy was called. The `toHaveBeenCalledWith` matcher will return true if the argument list matches any of the recorded calls to the spy.
  */
@@ -607,7 +649,7 @@ describe("A spy", function() {
   it("can provide the context and arguments to all calls", function() {
     foo.setBar(123);
 
-    expect(foo.setBar.calls.all()).toEqual([{object: foo, args: [123]}]);
+    expect(foo.setBar.calls.all()).toEqual([{object: foo, args: [123], returnValue: undefined}]);
   });
 
   /**
@@ -617,7 +659,7 @@ describe("A spy", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
 
-    expect(foo.setBar.calls.mostRecent()).toEqual({object: foo, args: [456, "baz"]});
+    expect(foo.setBar.calls.mostRecent()).toEqual({object: foo, args: [456, "baz"], returnValue: undefined});
   });
 
   /**
@@ -627,7 +669,25 @@ describe("A spy", function() {
     foo.setBar(123);
     foo.setBar(456, "baz");
 
-    expect(foo.setBar.calls.first()).toEqual({object: foo, args: [123]});
+    expect(foo.setBar.calls.first()).toEqual({object: foo, args: [123], returnValue: undefined});
+  });
+
+  /**
+   * When inspecting the return from `all()`, `mostRecent()` and `first()`, the `object` property is set to the value of `this` when the spy was called.
+   */
+  it("tracks the context", function() {
+    var spy = jasmine.createSpy('spy');
+    var baz = {
+      fn: spy
+    };
+    var quux = {
+      fn: spy
+    };
+    baz.fn(123);
+    quux.fn(456);
+
+    expect(spy.calls.first().object).toBe(baz);
+    expect(spy.calls.mostRecent().object).toBe(quux);
   });
 
   /**
@@ -738,6 +798,28 @@ describe("jasmine.any", function() {
 });
 
 /**
+ ## Matching existance with `jasmine.anything`
+ `jasmine.anything` returns `true` if the actual value is not `null` or `undefined`.
+ */
+
+describe("jasmine.anything", function() {
+  it("matches anything", function() {
+    expect(1).toEqual(jasmine.anything());
+  });
+
+  describe("when used with a spy", function() {
+    it("is useful when the argument can be ignored", function() {
+      var foo = jasmine.createSpy('foo');
+      foo(12, function() {
+        return false;
+      });
+
+      expect(foo).toHaveBeenCalledWith(12, jasmine.anything());
+    });
+  });
+});
+
+/**
  ## Partial Matching with `jasmine.objectContaining`
  `jasmine.objectContaining` is for those times when an expectation only cares about certain key/value pairs in the actual.
  */
@@ -780,17 +862,95 @@ describe("jasmine.objectContaining", function() {
   });
 });
 
+/**
+ ## Partial Array Matching with `jasmine.arrayContaining`
+ `jasmine.arrayContaining` is for those times when an expectation only cares about some of the values in an array.
+ */
+
+describe("jasmine.arrayContaining", function() {
+  var foo;
+
+  beforeEach(function() {
+    foo = [1, 2, 3, 4];
+  });
+
+  it("matches arrays with some of the values", function() {
+    expect(foo).toEqual(jasmine.arrayContaining([3, 1]));
+    expect(foo).not.toEqual(jasmine.arrayContaining([6]));
+  });
+
+  describe("when used with a spy", function() {
+    it("is useful when comparing arguments", function() {
+      var callback = jasmine.createSpy('callback');
+
+      callback([1, 2, 3, 4]);
+
+      expect(callback).toHaveBeenCalledWith(jasmine.arrayContaining([4, 2, 3]));
+      expect(callback).not.toHaveBeenCalledWith(jasmine.arrayContaining([5, 2]));
+    });
+  });
+});
 
 /**
- ## Mocking the JavaScript Timeout Functions
+ ## String Matching with `jasmine.stringMatching`
+ `jasmine.stringMatching` is for when you don't want to match a string in a larger object exactly, or match a portion of a string in a spy expectation.
+ */
+describe('jasmine.stringMatching', function() {
+  it("matches as a regexp", function() {
+    expect({foo: 'bar'}).toEqual({foo: jasmine.stringMatching(/^bar$/)});
+    expect({foo: 'foobarbaz'}).toEqual({foo: jasmine.stringMatching('bar')});
+  });
+
+  describe("when used with a spy", function() {
+    it("is useful for comparing arguments", function() {
+      var callback = jasmine.createSpy('callback');
+
+      callback('foobarbaz');
+
+      expect(callback).toHaveBeenCalledWith(jasmine.stringMatching('bar'));
+      expect(callback).not.toHaveBeenCalledWith(jasmine.stringMatching(/^bar$/));
+    });
+  });
+});
+
+/**
+ ## Custom asymmetric equality tester
+ When you need to check that something meets a certain criteria, without being strictly equal, you can also specify a custom asymmetric equality tester simply by providing an object that has an `asymmetricMatch` function.
+ */
+describe("custom asymmetry", function() {
+  var tester = {
+    asymmetricMatch: function(actual) {
+      var secondValue = actual.split(',')[1];
+      return secondValue === 'bar';
+    }
+  };
+
+  it("dives in deep", function() {
+    expect("foo,bar,baz,quux").toEqual(tester);
+  });
+
+  describe("when used with a spy", function() {
+    it("is useful for comparing arguments", function() {
+      var callback = jasmine.createSpy('callback');
+
+      callback('foo,bar,baz');
+
+      expect(callback).toHaveBeenCalledWith(tester);
+    });
+  });
+});
+
+
+/**
+ ## Jasmine Clock
  __This syntax has changed for Jasmine 2.0.__
- The Jasmine Clock is available for a test suites that need the ability to use `setTimeout` or `setInterval` callbacks. It makes the timer callbacks synchronous, executing the registered functions only once the clock is ticked forward in time. This makes timer-related code much easier to test.
+ The Jasmine Clock is available for testing time dependent code.
  */
 describe("Manually ticking the Jasmine Clock", function() {
   var timerCallback;
 
   /**
-   It is installed with a call to `jasmine.clock().install` in a spec or suite that needs to call the timer functions.
+   It is installed with a call to `jasmine.clock().install` in a spec or suite that needs to manipulate time.
    */
   beforeEach(function() {
     timerCallback = jasmine.createSpy("timerCallback");
@@ -798,15 +958,17 @@ describe("Manually ticking the Jasmine Clock", function() {
   });
 
   /**
-   *    Be sure to uninstall the clock after you are done to restore the original timer functions.
-   *       */
+   Be sure to uninstall the clock after you are done to restore the original functions.
+   */
   afterEach(function() {
     jasmine.clock().uninstall();
   });
 
-
   /**
-   Calls to any registered callback are triggered when the clock is ticked forward via the `jasmine.clock().tick` function, which takes a number of milliseconds.
+   ### Mocking the JavaScript Timeout Functions
+   You can make `setTimeout` or `setInterval` synchronous executing the registered functions only once the clock is ticked forward in time.
+
+   To execute registered functions, move time forward via the `jasmine.clock().tick` function, which takes a number of milliseconds.
    */
   it("causes a timeout to be called synchronously", function() {
     setTimeout(function() {
@@ -836,7 +998,23 @@ describe("Manually ticking the Jasmine Clock", function() {
     jasmine.clock().tick(50);
     expect(timerCallback.calls.count()).toEqual(2);
   });
+
+  /**
+   ### Mocking the Date
+   The Jasmine Clock can also be used to mock the current date.
+  */
+  describe("Mocking the Date object", function(){
+    it("mocks the Date object and sets it to a given time", function() {
+      var baseTime = new Date(2013, 9, 23);
+      // If you do not provide a base time to `mockDate` it will use the current date.
+      jasmine.clock().mockDate(baseTime);
+
+      jasmine.clock().tick(50);
+      expect(new Date().getTime()).toEqual(baseTime.getTime() + 50);
+    });
+  });
 });
+
 
 /**
  ## Asynchronous Support
@@ -866,30 +1044,26 @@ describe("Asynchronous specs", function() {
   });
 
   /**
-   By default jasmine will wait for 5 seconds for an asynchronous spec to finish before causing at timeout failure.
-   If specific specs should fail faster or need more time this can be adjusted by setting `jasmine.DEFAULT_TIMEOUT_INTERVAL` around them.
+   By default jasmine will wait for 5 seconds for an asynchronous spec to finish before causing a timeout failure.
+   If specific specs should fail faster or need more time this can be adjusted by passing a timeout value to `it`, etc.
 
    If the entire suite should have a different timeout, `jasmine.DEFAULT_TIMEOUT_INTERVAL` can be set globally, outside of any given `describe`.
    */
-  if (typeof Envjs === "undefined") {
-      describe("long asynchronous specs", function () {
-          var originalTimeout;
-          beforeEach(function () {
-              originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-              jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-          });
+  describe("long asynchronous specs", function() {
+    beforeEach(function(done) {
+      done();
+    }, 1000);
 
-          it("takes a long time", function (done) {
-              setTimeout(function () {
-                  done();
-              }, 9000);
-          });
+    it("takes a long time", function(done) {
+      setTimeout(function() {
+        done();
+      }, 9000);
+    }, 10000);
 
-          afterEach(function () {
-              jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-          });
-      });
-  }
+    afterEach(function(done) {
+      done();
+    }, 1000);
+  });
 });
 
 
