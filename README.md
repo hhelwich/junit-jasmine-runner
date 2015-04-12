@@ -20,7 +20,7 @@ Add project dependency. E.g if you use maven:
 <dependency>
   <groupId>de.helwich.junit</groupId>
   <artifactId>junit-jasmine-runner</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <scope>test</scope>
 </dependency>
 ```
