@@ -5,7 +5,7 @@ JUnit Jasmine Runner
 * Runs [Jasmine Tests](http://jasmine.github.io/2.0/introduction.html) with JUnit
 * Integrates with Eclipse, IntelliJ, Maven etc.
 * Uses Java Nashorn JavaScript interpreter
-* Optional Browser Support (with [Envjs](http://www.envjs.com/))
+* Optional Browser Support (with [Envjs](https://github.com/thatcher/env-js))
 * Supports Jasmine 2
 
 ### Requirements
