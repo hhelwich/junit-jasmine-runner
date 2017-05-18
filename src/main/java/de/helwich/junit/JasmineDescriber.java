@@ -6,7 +6,7 @@ import java.util.List;
 import org.junit.runner.Description;
 
 /**
- * Called from JavaSript by jasmine mocks while interpreting the jasmine specs. Builds a spec description tree which can
+ * Called from JavaScript by jasmine mocks while interpreting the jasmine specs. Builds a spec description tree which can
  * be given to junit before tests are executed.
  * 
  * @author Hendrik Helwich
