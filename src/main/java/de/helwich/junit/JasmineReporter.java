@@ -1,11 +1,12 @@
 package de.helwich.junit;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Called from JavaScript while executing the tests. The notifications are passed directly to a jUnit notifier object.
@@ -58,7 +59,7 @@ public class JasmineReporter {
         notifier.fireTestFinished(desc);
     }
 
-    public void specStarted(String id, String description, String fullName, String[] failedExpectations) {
+    public void specStarted(String id, String description, String fullName, String[] failedExpectationMessages) {
         Description desc = descriptionStack.get(descriptionStackIndex);
         if (!(description + "()").equals(desc.getDisplayName()) || !desc.isTest()) {
             throw new RuntimeException("unexpected test description");
@@ -66,13 +67,15 @@ public class JasmineReporter {
         notifier.fireTestStarted(desc);
     }
 
-    public void specDone(String id, String description, String fullName, String[] failedExpectations, String status) {
+    public void specDone(String id, String description, String fullName, String[] failedExpectationMessages, String status) {
         Description desc = descriptionStack.remove(descriptionStackIndex);
         if (!(description + "()").equals(desc.getDisplayName()) || !desc.isTest()) {
             throw new RuntimeException("unexpected test description");
         }
         if ("failed".equals(status)) {
-            notifier.fireTestFailure(new Failure(desc, null));
+            String failureMessage = String.join("\n\n\t", failedExpectationMessages);
+            AssertionFailedError assertionFailedError = new AssertionFailedError(fullName + ":\nFailed expectations: \n\n\t" + failureMessage);
+            notifier.fireTestFailure(new Failure(desc, assertionFailedError));
         } else if ("pending".equals(status)) {
             notifier.fireTestIgnored(desc);
         } else {

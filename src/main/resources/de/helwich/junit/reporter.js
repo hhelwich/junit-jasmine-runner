@@ -26,11 +26,17 @@
         },
         specStarted: function(result) {
             //print("specStarted"+JSON.stringify(result));
-            junitReporter.specStarted(result.id, result.description, result.fullName, result.failedExpectations);
+            // JS stack isn't particularly useful right now because it doesn't show lines in the test file itself.
+            var failureMessages = result.failedExpectations.map(function(failedExpectation) { return failedExpectation.message; });
+            // print("Failure messages: " + failureMessages);
+            junitReporter.specStarted(result.id, result.description, result.fullName, failureMessages);
         },
         specDone: function(result) {
-            //print("specDone"+JSON.stringify(result));
-            junitReporter.specDone(result.id, result.description, result.fullName, result.failedExpectations, result.status);
+            // print("specDone"+JSON.stringify(result));
+            // JS stack isn't particularly useful right now because it doesn't show lines in the test file itself.
+            var failureMessages = result.failedExpectations.map(function(failedExpectation) { return failedExpectation.message; });
+            // print("Failure messages: " + failureMessages);
+            junitReporter.specDone(result.id, result.description, result.fullName, failureMessages, result.status);
         }
     };
 
