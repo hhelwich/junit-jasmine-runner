@@ -1,3 +1,9 @@
+### v0.1.4 (2017-07-27)
+
+Features:
+
+* Add Jasmine test failure messages to JUnit output
+
 ### v0.1.3 (2015-04-12)
 
 Features:
